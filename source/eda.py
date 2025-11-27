@@ -138,6 +138,49 @@ def plot_tennis_field_heatmap(csv_path):
     plt.tight_layout()
     plt.show()
 
-plot_population_vs_fields('data_full.csv')
-plot_tennis_field_heatmap('data_full.csv')
-plot_scatter_tennis_fields_vs_population('data_full.csv')
+
+def court_per_population_index_per_10k(path) -> pd.DataFrame:
+    df = pd.read_csv(path)
+
+    # Count tennis courts per municipality
+    court_counts = df.groupby("municipality").size().reset_index(name="num_courts")
+
+    # Get population per municipality
+    populations = df.groupby("municipality")["population"].first().reset_index()
+
+    # Merge
+    merged = court_counts.merge(populations, on="municipality")
+
+    # Calculate courts per 10,000 people
+    merged["court_population_index"] = (merged["num_courts"] / merged["population"]) * 10000
+
+    # Sort descending: highest courts per 10k people first
+    merged = merged.sort_values("court_population_index")
+    return merged
+
+
+
+fields_per_10k = (court_per_population_index_per_10k(r'C:\Users\kalot\Documents\GitHub\tennis-fields-athens\data\data_full.csv'))
+fields_per_10k.to_csv('fields_per_10k.csv')
+# plot_population_vs_fields('data_full.csv')
+# plot_tennis_field_heatmap('data_full.csv')
+# plot_scatter_tennis_fields_vs_population('data_full.csv')
+
+def bar_plot_pop_index(path) -> None:
+
+    merged = pd.read_csv("court_per_population_index.csv")
+
+    plot_df = merged.sort_values("court_population_index")
+
+    plt.figure(figsize=(14, 7))
+    plt.bar(plot_df["municipality"], plot_df["court_population_index"])
+    plt.xticks(rotation=90)
+    plt.xlabel("Municipality")
+    plt.ylabel("Court Population Index")
+    plt.title("Tennis Court Population Index by Municipality")
+    plt.tight_layout()
+
+    plt.show()
+
+#print(pd.read_csv('court_per_population_index.csv'))
+
