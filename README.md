@@ -37,4 +37,11 @@ Here we can see the number of entries - tennis fields vs the corresponding popul
 
 ![Alt text](resources/fields_vs_pop_histo.png)
 
+## Fields per 10k per muncipality 
+Using DataWrapper we can visualize the density. In this link https://datawrapper.dwcdn.net/exVK9/1/ the map with the data can be found.
+
+![Alt text](resources/Screenshot_31.png)
+
+
+
 
